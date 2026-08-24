@@ -17,28 +17,28 @@ function CartItem({ onContinueShopping }) {
     0
   );
 
-  const handleIncrease = (item) => {
+  const increaseQuantity = (item) => {
     dispatch(
       updateQuantity({
-        id: item.id || item.name,
+        name: item.name,
         quantity: item.quantity + 1,
       })
     );
   };
 
-  const handleDecrease = (item) => {
+  const decreaseQuantity = (item) => {
     if (item.quantity > 1) {
       dispatch(
         updateQuantity({
-          id: item.id || item.name,
+          name: item.name,
           quantity: item.quantity - 1,
         })
       );
     }
   };
 
-  const handleRemove = (item) => {
-    dispatch(removeItem(item.id || item.name));
+  const deleteItem = (item) => {
+    dispatch(removeItem(item.name));
   };
 
   if (cartItems.length === 0) {
@@ -46,18 +46,27 @@ function CartItem({ onContinueShopping }) {
       <div className="cart-page">
         <h1>Shopping Cart</h1>
         <p>Your cart is empty.</p>
-        <button onClick={onContinueShopping}>Continue Shopping</button>
+        <button onClick={onContinueShopping}>
+          Continue Shopping
+        </button>
       </div>
     );
   }
 
   return (
     <div className="cart-page">
+      <nav className="navbar">
+        <div className="nav-brand">🌿 Paradise Nursery</div>
+        <button onClick={onContinueShopping}>
+          Continue Shopping
+        </button>
+      </nav>
+
       <h1>Shopping Cart</h1>
 
       <div className="cart-items">
         {cartItems.map((item) => (
-          <div className="cart-item" key={item.id || item.name}>
+          <div className="cart-item" key={item.name}>
             <img src={item.image} alt={item.name} />
 
             <div className="cart-item-details">
@@ -65,16 +74,22 @@ function CartItem({ onContinueShopping }) {
               <p>Price: ${item.cost}</p>
 
               <div className="quantity-controls">
-                <button onClick={() => handleDecrease(item)}>−</button>
+                <button onClick={() => decreaseQuantity(item)}>
+                  -
+                </button>
+
                 <span>{item.quantity}</span>
-                <button onClick={() => handleIncrease(item)}>+</button>
+
+                <button onClick={() => increaseQuantity(item)}>
+                  +
+                </button>
               </div>
 
               <p>
                 Subtotal: ${(item.cost * item.quantity).toFixed(2)}
               </p>
 
-              <button onClick={() => handleRemove(item)}>
+              <button onClick={() => deleteItem(item)}>
                 Delete
               </button>
             </div>
@@ -87,12 +102,11 @@ function CartItem({ onContinueShopping }) {
         <h2>Total Amount: ${totalAmount.toFixed(2)}</h2>
       </div>
 
-      <div className="cart-actions">
-        <button onClick={onContinueShopping}>
-          Continue Shopping
-        </button>
-        <button>Checkout</button>
-      </div>
+      <button onClick={onContinueShopping}>
+        Continue Shopping
+      </button>
+
+      <button>Checkout</button>
     </div>
   );
 }
